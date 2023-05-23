@@ -15,30 +15,15 @@ public class InputHandler {
   public void getInput() {
     String input = waitForInput();
 
-    // オペランドの場合
     if (isOperator(input)) {
-      if(input.equals("=")) {
-        calculator.calculate();
-      } else if(input.equals("c")){
-        calculator.initialize();
-      } else {
-        calculator.setOperator(input);
-      }
+      handleOperatorInput(input, calculator);
     } else if (isNumeric(input)) {
-      if(calculator.getResult() != 0.0 && calculator.getOperand()[0] == 0.0 && calculator.getOperator() == ""){
-        System.out.println("ERROR: 演算子を入力してください。\n");
-      }else{
-        double operand = Double.parseDouble(input);
-        calculator.setOperand(operand);
-
-        if(calculator.getOperator() != "" && calculator.getResult() != 0.0){
-          calculator.calculate();
-        }
-      }
+      handleNumericInput(input, calculator);
     } else {
-      System.out.println("ERROR: 無効な入力です。\n");
+      printErrorMessage("無効な入力です。");
     }
 
+    // 出力
     System.out.println("________________________________________");
     System.out.println("計算結果: " + String.valueOf(calculator.getResult()));
     System.out.println("operand: " + Arrays.toString(calculator.getOperand()));
@@ -72,21 +57,34 @@ public class InputHandler {
   }
 
   public static boolean isOperator(String str) {
-    String regex = "[+\\-÷*×%=c]+";
+    String regex = "[+-÷*×%=c\\/]";
     return str.matches(regex);
   }
 
-  // public static String concatDigits(String baseValue, String numStr) {
-  //   if (baseValue == "0" || baseValue == null) {
-  //     baseValue = "";
-  //   }
+  public void handleOperatorInput(String input, Calculator calculator) {
+    if (input.equals("=")) {
+        calculator.calculate();
+    } else if (input.equals("c")) {
+        calculator.initialize();
+    } else {
+        calculator.setOperator(input);
+    }
+  }
 
-  //   for (int i = 0; i < numStr.length(); i++) {
-  //     char digit = numStr.charAt(i); // 1桁の数字を取得する
-  //     baseValue += digit; // 1桁の数字を連結する
-  //   }
-  //   // double concatenatedNum = Double.parseDouble(baseValue); // 連結した文字列をdouble型に変換する
-  //   // return concatenatedNum; // 連結した数字を返す
-  //   return baseValue;
-  // }
+  public void handleNumericInput(String input, Calculator calculator) {
+      if (calculator.getResult() != 0.0 && calculator.getOperand()[0] == 0.0 && calculator.getOperator().isEmpty()) {
+          printErrorMessage("演算子を入力してください。");
+      } else {
+          double operand = Double.parseDouble(input);
+          calculator.setOperand(operand);
+
+          if (!calculator.getOperator().isEmpty() && calculator.getResult() != 0.0) {
+              calculator.calculate();
+          }
+      }
+  }
+
+  public void printErrorMessage(String message) {
+      System.out.println("ERROR: " + message + "\n");
+  }
 }

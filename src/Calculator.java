@@ -82,6 +82,7 @@ public class Calculator {
         this.result = num1 * num2;
         break;
       case "/":
+      case "÷":
         this.result = num1 / num2;
         break;
       case "%":
@@ -94,4 +95,5 @@ public class Calculator {
         System.out.println("計算の構文に問題があります。");
     }
   }
+
 }
