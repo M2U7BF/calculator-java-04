@@ -1,39 +1,50 @@
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class InputHandler {
   private Calculator calculator;
   private Scanner scanner;
-  private Logger logger;
 
   // コンストラクタ
   public InputHandler() {
     calculator = new Calculator();
     scanner = new Scanner(System.in);
-    logger = new Logger();
   }
 
   // 入力を取得するメソッド
   public void getInput() {
     String input = waitForInput();
-    System.out.println("operand: " + calculator.getOperand());
 
     // オペランドの場合
     if (isOperator(input)) {
-      calculator.calculate(input);
-
-      logger.log("This is a log message.");
-      System.out.println("計算結果: " + String.valueOf(calculator.getResult()));
-      return;
-    } else {
-      if (!isNumeric(input)) {
-        return;
+      if(input.equals("=")) {
+        calculator.calculate();
+      } else if(input.equals("c")){
+        calculator.initialize();
+      } else {
+        calculator.setOperator(input);
       }
-      double operand = calculator.getOperand();
-      operand = concatDigits(operand, input);
-      calculator.setOperand(operand);
-      System.out.println("計算結果: " + String.valueOf(calculator.getResult()));
-      return;
+    } else if (isNumeric(input)) {
+      if(calculator.getResult() != 0.0 && calculator.getOperand()[0] == 0.0 && calculator.getOperator() == ""){
+        System.out.println("ERROR: 演算子を入力してください。\n");
+      }else{
+        double operand = Double.parseDouble(input);
+        calculator.setOperand(operand);
+
+        if(calculator.getOperator() != "" && calculator.getResult() != 0.0){
+          calculator.calculate();
+        }
+      }
+    } else {
+      System.out.println("ERROR: 無効な入力です。\n");
     }
+
+    System.out.println("________________________________________");
+    System.out.println("計算結果: " + String.valueOf(calculator.getResult()));
+    System.out.println("operand: " + Arrays.toString(calculator.getOperand()));
+    System.out.println("operator: " + calculator.getOperator());
+    System.out.println("----------------------------------------");
+    System.out.println("\n");
   }
 
   public static String waitForInput() {
@@ -56,28 +67,26 @@ public class InputHandler {
   }
 
   public static boolean isNumeric(String str) {
-    String regex = "[0-9０-９]+"; // 数字(0-9,０-９)の正規表現
+    String regex = "[-0-9０-９]+"; // 数字(0-9,０-９)の正規表現
     return str.matches(regex);
   }
 
   public static boolean isOperator(String str) {
-    String regex = "[+\\-÷×%=]+";
+    String regex = "[+\\-÷*×%=c]+";
     return str.matches(regex);
   }
 
-  public static double concatDigits(double baseValue, String numStr) {
-    String concatenatedStr;
-    if (baseValue == 0 || baseValue == 0.0) {
-      concatenatedStr = "";
-    } else {
-      concatenatedStr = Double.toString(baseValue);
-    }
+  // public static String concatDigits(String baseValue, String numStr) {
+  //   if (baseValue == "0" || baseValue == null) {
+  //     baseValue = "";
+  //   }
 
-    for (int i = 0; i < numStr.length(); i++) {
-      char digit = numStr.charAt(i); // 1桁の数字を取得する
-      concatenatedStr += digit; // 1桁の数字を連結する
-    }
-    double concatenatedNum = Double.parseDouble(concatenatedStr); // 連結した文字列をdouble型に変換する
-    return concatenatedNum; // 連結した数字を返す
-  }
+  //   for (int i = 0; i < numStr.length(); i++) {
+  //     char digit = numStr.charAt(i); // 1桁の数字を取得する
+  //     baseValue += digit; // 1桁の数字を連結する
+  //   }
+  //   // double concatenatedNum = Double.parseDouble(baseValue); // 連結した文字列をdouble型に変換する
+  //   // return concatenatedNum; // 連結した数字を返す
+  //   return baseValue;
+  // }
 }
