@@ -3,7 +3,6 @@ public class Calculator {
   private double result; // 計算結果を保持する変数
   private double[] operand;
   private String operator;
-  private boolean isNumber = true;
 
   // コンストラクタ
   public Calculator() {
@@ -12,15 +11,11 @@ public class Calculator {
     this.operator = "";
   }
 
-  // 計算結果を取得するメソッド
   public double getResult() {
     return this.result;
   }
   public double[] getOperand() {
     return this.operand;
-  }
-  public boolean getIsNumber(){
-    return this.isNumber;
   }
   public String getOperator() {
     return this.operator;
@@ -36,26 +31,22 @@ public class Calculator {
   public void setOperator(String operator) {
     this.operator = operator;
   }
-  public void setIsNumber(boolean isNumber){
-    this.isNumber = isNumber;
-  }
   public void setResult(double result){
     this.result = result;
   }
 
   // 計算を実行するメソッド
   public double calculate() {
-    double[] operand = this.operand;
-
-    if(operand[0] == 0.0 && operand[1] == 0.0){
+    // POINT: メソッドの処理の最初のあたりで、例外を拒否するのは常套手段です。
+    if(this.operand[0] == 0.0 && this.operand[1] == 0.0){
       System.out.println("計算対象が存在しません。");
       return 0;
     }
 
-    if(operand[0] != 0.0 && operand[1] == 0.0){
-      commonLogic(this.result, operand[0]);
+    if(this.operand[0] != 0.0 && this.operand[1] == 0.0){
+      executeCalculate(this.result, this.operand[0]);
     } else {
-      commonLogic(operand[0], operand[1]);
+      executeCalculate(this.operand[0], this.operand[1]);
     }
 
     this.operand = new double[2];
@@ -69,7 +60,7 @@ public class Calculator {
     this.operand = new double[2];
     this.operator = "";
   }
-  public void commonLogic(double num1, double num2){
+  private void executeCalculate(double num1, double num2){
     switch (this.operator) {
       case "+":
         this.result = num1 + num2;

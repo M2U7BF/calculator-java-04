@@ -60,17 +60,17 @@ public class InputHandler {
     return inputBuilder.toString();
   }
 
-  public static boolean isNumeric(String str) {
+  private static boolean isNumeric(String str) {
     String regex = "[-.0-9０-９]+"; // 数字(0-9,０-９)の正規表現
     return str.matches(regex);
   }
 
-  public static boolean isOperator(String str) {
+  private static boolean isOperator(String str) {
     String regex = "[\\+\\-\\÷\\*\\×\\%\\=c\\/]";
     return str.matches(regex);
   }
 
-  public void handleOperatorInput(String input, Calculator calculator) {
+  private void handleOperatorInput(String input, Calculator calculator) {
     if (input.equals("=")) {
         calculator.calculate();
     } else if (input.equals("c")) {
@@ -80,7 +80,7 @@ public class InputHandler {
     }
   }
 
-  public void handleNumericInput(String input, Calculator calculator) {
+  private void handleNumericInput(String input, Calculator calculator) {
       if (calculator.getResult() != 0.0 && calculator.getOperand()[0] == 0.0 && calculator.getOperator().isEmpty()) {
           printErrorMessage("演算子を入力してください。");
       } else {
