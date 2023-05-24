@@ -23,9 +23,18 @@ public class InputHandler {
       printErrorMessage("無効な入力です。");
     }
 
+    // 少数点以下に値が無い場合は、整数で表示
+    double result = calculator.getResult();
+    String resultStr = "";
+    if (result == Math.floor(result)) {
+      resultStr = String.format("%.0f", result);
+    }else{
+      resultStr = String.valueOf(result);
+    }
+
     // 出力
     System.out.println("________________________________________");
-    System.out.println("計算結果: " + String.valueOf(calculator.getResult()));
+    System.out.println("計算結果: " + resultStr);
     System.out.println("operand: " + Arrays.toString(calculator.getOperand()));
     System.out.println("operator: " + calculator.getOperator());
     System.out.println("----------------------------------------");
@@ -52,12 +61,12 @@ public class InputHandler {
   }
 
   public static boolean isNumeric(String str) {
-    String regex = "[-0-9０-９]+"; // 数字(0-9,０-９)の正規表現
+    String regex = "[-.0-9０-９]+"; // 数字(0-9,０-９)の正規表現
     return str.matches(regex);
   }
 
   public static boolean isOperator(String str) {
-    String regex = "[+-÷*×%=c\\/]";
+    String regex = "[\\+\\-\\÷\\*\\×\\%\\=c\\/]";
     return str.matches(regex);
   }
 
